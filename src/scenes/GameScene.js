@@ -21,9 +21,14 @@ export default class GameScene extends Phaser.Scene {
     this.scores = data.scores || [];
     this.practiceMode = data.practiceMode || false;
     this.practiceTerrainIndex = data.practiceTerrainIndex;
+    this.customTerrain = data.customTerrain || null;
+    this.returnScene = data.returnScene || 'MenuScene';
+    this.editorState = data.editorState || null;
 
-    // Get terrain - in practice mode use specific terrain, otherwise cycle through
-    if (this.practiceMode && this.practiceTerrainIndex !== undefined) {
+    // Get terrain - custom terrain takes priority, then practice mode, then regular cycle
+    if (this.customTerrain) {
+      this.terrain = this.customTerrain;
+    } else if (this.practiceMode && this.practiceTerrainIndex !== undefined) {
       this.terrain = TERRAINS[this.practiceTerrainIndex] || TERRAINS[0];
     } else {
       this.terrain = TERRAINS[this.attemptNumber - 1] || TERRAINS[0];
@@ -580,7 +585,11 @@ export default class GameScene extends Phaser.Scene {
           if (progress >= 1) {
             isHolding = false;
             soundManager.playClick();
-            this.scene.start('MenuScene');
+            if (this.returnScene === 'LevelEditorScene' && this.editorState) {
+              this.scene.start('LevelEditorScene', { editorState: this.editorState });
+            } else {
+              this.scene.start(this.returnScene);
+            }
           }
         }
       }
@@ -588,7 +597,18 @@ export default class GameScene extends Phaser.Scene {
   }
 
   nextAttempt() {
-    if (this.practiceMode) {
+    if (this.customTerrain) {
+      // Custom terrain (from editor or browser), restart same level
+      this.scene.restart({
+        attemptNumber: 1,
+        totalAttempts: 1,
+        scores: [],
+        practiceMode: true,
+        customTerrain: this.customTerrain,
+        returnScene: this.returnScene,
+        editorState: this.editorState
+      });
+    } else if (this.practiceMode) {
       // In practice mode, restart the same level
       this.scene.restart({
         attemptNumber: 1,

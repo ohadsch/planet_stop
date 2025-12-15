@@ -3,6 +3,8 @@ import BootScene from './scenes/BootScene.js';
 import MenuScene from './scenes/MenuScene.js';
 import GameScene from './scenes/GameScene.js';
 import ResultsScene from './scenes/ResultsScene.js';
+import LevelEditorScene from './scenes/LevelEditorScene.js';
+import LevelBrowserScene from './scenes/LevelBrowserScene.js';
 
 // Phaser game configuration
 const config = {
@@ -19,7 +21,7 @@ const config = {
     width: 960,
     height: 540
   },
-  scene: [BootScene, MenuScene, GameScene, ResultsScene]
+  scene: [BootScene, MenuScene, GameScene, ResultsScene, LevelEditorScene, LevelBrowserScene]
 };
 
 // Create the game instance

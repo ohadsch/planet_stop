@@ -34,24 +34,34 @@ export default class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Start Run button
-    this.createButton(width / 2, 260, 'Start Run (10 Levels)', () => {
+    this.createButton(width / 2, 220, 'Start Run (10 Levels)', () => {
       this.scene.start('GameScene', { attemptNumber: 1, totalAttempts: 10, scores: [], practiceMode: false });
     });
 
     // Practice Mode button
-    this.createButton(width / 2, 330, 'Practice Mode', () => {
+    this.createButton(width / 2, 275, 'Practice Mode', () => {
       this.showLevelSelect();
     });
 
+    // Create Level button
+    this.createButton(width / 2, 330, 'Create Level', () => {
+      this.scene.start('LevelEditorScene');
+    });
+
+    // Community Levels button
+    this.createButton(width / 2, 385, 'Community Levels', () => {
+      this.scene.start('LevelBrowserScene');
+    });
+
     // How to Play button
-    this.createButton(width / 2, 400, 'How to Play', () => {
+    this.createButton(width / 2, 440, 'How to Play', () => {
       this.showHowToPlay();
     });
 
     // Best score display
     const bestScore = localStorage.getItem('planetStopBestScore') || 0;
-    this.add.text(width / 2, 490, `Best Score: ${bestScore}`, {
-      fontSize: '24px',
+    this.add.text(width / 2, 510, `Best Score: ${bestScore}`, {
+      fontSize: '20px',
       fontFamily: 'Arial',
       color: '#ffcc44'
     }).setOrigin(0.5);
