@@ -7,10 +7,12 @@ import ResultsScene from './scenes/ResultsScene.js';
 // Phaser game configuration
 const config = {
   type: Phaser.AUTO,
-  width: 960,
-  height: 540,
   parent: 'game-container',
   backgroundColor: '#0a0a1a',
+  render: {
+    pixelArt: false,
+    antialias: true
+  },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -22,3 +24,8 @@ const config = {
 
 // Create the game instance
 const game = new Phaser.Game(config);
+
+// Handle resize
+window.addEventListener('resize', () => {
+  game.scale.refresh();
+});
