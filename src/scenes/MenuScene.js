@@ -34,7 +34,7 @@ export default class MenuScene extends Phaser.Scene {
 
     // Start button
     this.createButton(width / 2, 300, 'Start Run (10 Attempts)', () => {
-      this.scene.start('GameScene');
+      this.scene.start('GameScene', { attemptNumber: 1, totalAttempts: 10, scores: [] });
     });
 
     // How to Play button

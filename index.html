@@ -14,22 +14,36 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    body {
       width: 100%;
       height: 100%;
+      height: 100dvh;
       overflow: hidden;
       background: #0a0a1a;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
-    }
-
-    #game-container {
-      width: 100vw;
-      height: 100vh;
       position: fixed;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    #game-container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
 
     /* Rotate device prompt for portrait mode */
@@ -40,6 +54,7 @@
       left: 0;
       width: 100%;
       height: 100%;
+      height: 100dvh;
       background: #0a0a1a;
       z-index: 9999;
       flex-direction: column;
@@ -83,6 +98,18 @@
   <div id="game-container"></div>
 
   <script>
+    // Fix for mobile viewport height (address bar)
+    function setViewportHeight() {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+      // Update game container size
+      const container = document.getElementById('game-container');
+      if (container) {
+        container.style.height = `${window.innerHeight}px`;
+      }
+    }
+
     // Handle orientation on mobile
     function checkOrientation() {
       const rotatePrompt = document.getElementById('rotate-prompt');
@@ -96,11 +123,32 @@
       }
     }
 
+    // Initial setup
+    setViewportHeight();
     checkOrientation();
-    window.addEventListener('resize', checkOrientation);
-    window.addEventListener('orientationchange', () => {
-      setTimeout(checkOrientation, 100);
+
+    // Handle resize and orientation changes
+    window.addEventListener('resize', () => {
+      setViewportHeight();
+      checkOrientation();
     });
+
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        setViewportHeight();
+        checkOrientation();
+      }, 150);
+    });
+
+    // Trigger resize on scroll (helps when address bar hides)
+    let lastHeight = window.innerHeight;
+    setInterval(() => {
+      if (window.innerHeight !== lastHeight) {
+        lastHeight = window.innerHeight;
+        setViewportHeight();
+        window.dispatchEvent(new Event('resize'));
+      }
+    }, 250);
   </script>
 
   <script type="module" src="/src/main.js"></script>
