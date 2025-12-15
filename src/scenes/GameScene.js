@@ -19,9 +19,15 @@ export default class GameScene extends Phaser.Scene {
     this.attemptNumber = data.attemptNumber || 1;
     this.totalAttempts = data.totalAttempts || 10;
     this.scores = data.scores || [];
+    this.practiceMode = data.practiceMode || false;
+    this.practiceTerrainIndex = data.practiceTerrainIndex;
 
-    // Get terrain for current attempt (0-indexed)
-    this.terrain = TERRAINS[this.attemptNumber - 1] || TERRAINS[0];
+    // Get terrain - in practice mode use specific terrain, otherwise cycle through
+    if (this.practiceMode && this.practiceTerrainIndex !== undefined) {
+      this.terrain = TERRAINS[this.practiceTerrainIndex] || TERRAINS[0];
+    } else {
+      this.terrain = TERRAINS[this.attemptNumber - 1] || TERRAINS[0];
+    }
 
     this.roverX = X_START;
     this.roverV = this.terrain.initialSpeed;
@@ -293,10 +299,14 @@ export default class GameScene extends Phaser.Scene {
   createUI() {
     const { width } = this.cameras.main;
 
-    this.attemptText = this.add.text(20, 20, `Attempt ${this.attemptNumber} / ${this.totalAttempts}`, {
+    const attemptLabel = this.practiceMode
+      ? 'Practice Mode'
+      : `Attempt ${this.attemptNumber} / ${this.totalAttempts}`;
+
+    this.attemptText = this.add.text(20, 20, attemptLabel, {
       fontSize: '20px',
       fontFamily: 'Arial',
-      color: '#ffffff'
+      color: this.practiceMode ? '#88ff88' : '#ffffff'
     });
 
     this.terrainText = this.add.text(20, 50, this.terrain.name, {
@@ -488,16 +498,23 @@ export default class GameScene extends Phaser.Scene {
       }).setOrigin(0.5);
     }
 
-    // Running total
-    const totalSoFar = this.scores.reduce((sum, s) => sum + s.score, 0);
-    this.add.text(width / 2, height / 2 + 40, `Total: ${totalSoFar} / ${this.attemptNumber * 100}`, {
-      fontSize: '18px',
-      fontFamily: 'Arial',
-      color: '#ffcc44'
-    }).setOrigin(0.5);
+    // Running total (only in regular mode)
+    if (!this.practiceMode) {
+      const totalSoFar = this.scores.reduce((sum, s) => sum + s.score, 0);
+      this.add.text(width / 2, height / 2 + 40, `Total: ${totalSoFar} / ${this.attemptNumber * 100}`, {
+        fontSize: '18px',
+        fontFamily: 'Arial',
+        color: '#ffcc44'
+      }).setOrigin(0.5);
+    }
 
-    const isLastAttempt = this.attemptNumber >= this.totalAttempts;
-    const buttonText = isLastAttempt ? 'See Results' : 'Next Attempt';
+    let buttonText;
+    if (this.practiceMode) {
+      buttonText = 'Try Again';
+    } else {
+      const isLastAttempt = this.attemptNumber >= this.totalAttempts;
+      buttonText = isLastAttempt ? 'See Results' : 'Next Attempt';
+    }
 
     const btn = this.add.text(width / 2, height / 2 + 75, `[ ${buttonText} ]`, {
       fontSize: '22px',
@@ -571,7 +588,16 @@ export default class GameScene extends Phaser.Scene {
   }
 
   nextAttempt() {
-    if (this.attemptNumber >= this.totalAttempts) {
+    if (this.practiceMode) {
+      // In practice mode, restart the same level
+      this.scene.restart({
+        attemptNumber: 1,
+        totalAttempts: 1,
+        scores: [],
+        practiceMode: true,
+        practiceTerrainIndex: this.practiceTerrainIndex
+      });
+    } else if (this.attemptNumber >= this.totalAttempts) {
       // Go to results scene
       this.scene.start('ResultsScene', { scores: this.scores });
     } else {

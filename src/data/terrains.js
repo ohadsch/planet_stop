@@ -220,9 +220,9 @@ export const TERRAINS = [
   },
 
   {
-    id: 'FINAL_TEST',
-    name: 'Final Test Track',
-    description: 'The ultimate challenge - mixed zones!',
+    id: 'CHAOS_CANYON',
+    name: 'Chaos Canyon',
+    description: 'The ultimate challenge - survive the chaos!',
     accel: 195,
     rollingResistance: 18,
     brakeDecel: 320,
