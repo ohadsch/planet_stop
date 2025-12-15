@@ -11,6 +11,12 @@ const config = {
   height: 540,
   parent: 'game-container',
   backgroundColor: '#0a0a1a',
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 960,
+    height: 540
+  },
   scene: [BootScene, MenuScene, GameScene, ResultsScene]
 };
 
