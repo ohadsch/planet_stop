@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-planetstop-dev-02971-authRole",
+      "UnauthRoleArn": "arn:aws:iam::227418840555:role/amplify-planetstop-dev-02971-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::227418840555:role/amplify-planetstop-dev-02971-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-planetstop-dev-02971-deployment",
+      "UnauthRoleName": "amplify-planetstop-dev-02971-unauthRole",
+      "StackName": "amplify-planetstop-dev-02971",
+      "StackId": "arn:aws:cloudformation:us-west-1:227418840555:stack/amplify-planetstop-dev-02971/75bf1880-da42-11f0-b85f-061b5e956047",
+      "AmplifyAppId": "d3a19o4ii0mbkp"
+    },
+    "categories": {
+      "api": {
+        "planetstop": {}
+      }
+    }
+  }
+}
